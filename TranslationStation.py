@@ -71,7 +71,7 @@ async def on_message(message):
     if message.channel.name == 'bot_test':#786722399482937355:
         print('nice')
         #await message.channel.send('nice')
-
+    #hello
     print(googletrans.LANGCODES[message.channel.name])
 
     print(message.channel.category.channels)
