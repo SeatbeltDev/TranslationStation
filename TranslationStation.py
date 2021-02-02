@@ -50,10 +50,8 @@ async def on_message(message):
     #Translate and send to each language channel in station
     print(message.channel.category.channels)
     for ch in message.channel.category.channels:
-        if(ch == message.channel): continue
-        # print('asivuy3ris')
-        # print(ch.name)
-        # print(googletrans.LANGCODES[ch.name])
+        if ch == message.channel: continue #ignore message's channel
+        if ch.name not in googletrans.LANGCODES: continue #ignore non lang channels
         trans = t.translate(message.content,
             dest = googletrans.LANGCODES[ch.name]).text
         response = f'{message.author}: {trans}'
