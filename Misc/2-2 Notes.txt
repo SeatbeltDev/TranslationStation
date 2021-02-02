@@ -12,3 +12,8 @@ THIS WEEK
 
 
 Implement a loop to convert a message to a list of languages. If done, work on sending translations to unique language channels.
+
+
+Discord webhooks to change pic&name to person talking
+https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+
