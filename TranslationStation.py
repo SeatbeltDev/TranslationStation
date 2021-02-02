@@ -41,52 +41,26 @@ async def on_member_join(member):
         f'Hey {member.name}! Welcome to {guild.name}.'
     )
 
-# @client.event
-# async def on_message(message):
-#     if message.author == client.user:
-#         return #ignore bot's own messages
-
-#     quotes = [
-#         'bababooey',
-#         'bruh',
-#         'mama mia'
-#     ]
-
-#     if message.channel.id == '803685130257301534':
-#         response = 'asdfasdf'
-#         await message.channel.send(response)
-#     elif message.content == 'e':
-#         #respond to 'e' with a random quote
-#         response = random.choice(quotes)
-#         await message.channel.send(response)
-#     elif message.content == 'raise-exception':
-#         raise discord.DiscordException
-
-#test translate
+#Translate on message
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return #ignore bot's own messages
     
-    if message.channel.name == 'bot_test':#786722399482937355:
-        print('nice')
-        #await message.channel.send('nice')
-    #hello
-    print(googletrans.LANGCODES[message.channel.name])
-
+    #Translate and send to each language channel in station
     print(message.channel.category.channels)
     for ch in message.channel.category.channels:
-        # if(ch == message.channel): continue
-        print('asivuy3ris')
-        print(ch.name)
-        print(googletrans.LANGCODES[ch.name])
+        if(ch == message.channel): continue
+        # print('asivuy3ris')
+        # print(ch.name)
+        # print(googletrans.LANGCODES[ch.name])
         trans = t.translate(message.content,
             dest = googletrans.LANGCODES[ch.name]).text
         response = f'{message.author}: {trans}'
         await ch.send(response)
-        await message.add_reaction('✅')
-        
-
+    await message.add_reaction('✅')
+    
+    #SIMPLE TRANSLATE EN>ES
     # trans = t.translate(message.content, dest = 'es').text
     # response = f'{message.author}: {trans}'
     # channel = client.get_channel(803733879391256587) #change channel

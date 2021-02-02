@@ -1,0 +1,14 @@
+PAST WEEK
+- took a lot of time to think of improvements i could make to the structure and design of it, and make sure my proposal was clear
+- took some time to set up github repo and get re-acquainted with that since I haven't used it in a while, got it ready on both my desktop and laptop so I'd be ready to work on it in-person
+- made some small progress on the project itself, but i've been stuck on a bug
+
+IN CLASS
+- work out the bug i've been stuck on
+	- get multiple languages working at a time
+
+THIS WEEK
+- reach a point where I can stress test my bot with several languages at a time
+
+
+Implement a loop to convert a message to a list of languages. If done, work on sending translations to unique language channels.
