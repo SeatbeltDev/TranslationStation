@@ -5,6 +5,7 @@ import random
 import googletrans
 from dotenv import load_dotenv
 from googletrans import Translator
+from discord.utils import get
 
 
 #global vars from .env
@@ -74,9 +75,14 @@ async def on_message(message):
     # await message.add_reaction('✅')
 
 #Respons to reactions
-# @client.event
-# async def on_reaction_add(message):
-#     if message.content == 'React to this message to choose your language(s).'
+@client.event
+async def on_reaction_add(reaction, user):
+    #print(user.name)
+    if user == client.user: return
+
+    if reaction.message.content == 'React to this message to choose your language(s).':
+        if reaction.emoji == '🇯🇵':
+            await user.add_roles(get(user.guild.roles, name = 'Japanese'))
 
 #handle errors - catch bad message and write to file
 @client.event
