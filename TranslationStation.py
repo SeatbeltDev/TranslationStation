@@ -44,9 +44,18 @@ async def on_member_join(member):
 #Translate on message
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return #ignore bot's own messages
-    
+    if message.author == client.user: return #ignore bot's own messages
+    if message.channel.name == 'test': return #ignore test channel
+
+    #Lang roles self-service
+    flagEmojis = ['🇬🇧', '🇪🇸', '🇯🇵', '🇩🇪', '🇫🇷']
+    if message.channel.name == 'choose_language' and message.content == 'langs':
+        m = await message.channel.send('React to this message to choose your language(s).')
+        for flag in flagEmojis:
+            await m.add_reaction(flag)
+        return
+
+
     #Translate and send to each language channel in station
     for ch in message.channel.category.channels:
         if ch == message.channel: continue #ignore message's channel
@@ -63,7 +72,11 @@ async def on_message(message):
     # channel = client.get_channel(803733879391256587) #change channel
     # await channel.send(response)
     # await message.add_reaction('✅')
-    
+
+#Respons to reactions
+# @client.event
+# async def on_reaction_add(message):
+#     if message.content == 'React to this message to choose your language(s).'
 
 #handle errors - catch bad message and write to file
 @client.event
