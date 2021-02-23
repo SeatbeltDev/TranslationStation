@@ -17,6 +17,10 @@ t = Translator()
 intents = discord.Intents.all() #give bot all intents/permissions
 client = discord.Client(intents = intents)
 
+#Globals
+flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'jp':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷'}
+flagEmojisR = {i: d for d, i in flagEmojis.items()}
+
 #startup event
 @client.event
 async def on_ready():
@@ -49,7 +53,6 @@ async def on_message(message):
     if message.channel.name == 'test': return #ignore test channel
 
     #Lang roles self-service
-    flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'jp':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷'}
     if message.content == '*langs' and message.channel.name == 'choose_language':
         m = await message.channel.send('React to this message to choose your language(s).')
         for flag in flagEmojis:
@@ -81,8 +84,9 @@ async def on_reaction_add(reaction, user):
     if user == client.user: return
 
     if reaction.message.content == 'React to this message to choose your language(s).':
-        if reaction.emoji == '🇯🇵':
-            await user.add_roles(get(user.guild.roles, name = 'Japanese'))
+        if reaction.emoji in flagEmojisR:
+            await user.add_roles(get(user.guild.roles,
+                name = googletrans.LANGUAGES[flagEmojisR.get(reaction.emoji)]))
 
 #handle errors - catch bad message and write to file
 @client.event
