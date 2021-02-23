@@ -61,14 +61,17 @@ async def on_message(message):
     #Commands
     if message.content.startswith('*'):
         command = message.content[1:]
-        print(command)
+
         #Lang roles self-service
         if command == 'langs':# and message.channel.name == 'choose_language':
             m = await message.channel.send('React to this message to choose your language(s).')
             for flag in flagEmojis:
                 await m.add_reaction(activeFlagEmojis.get(flag))
-            return
-        #elif command == 'otherthing':
+
+        elif command.startswith('addlang'):
+            print('nice')
+            lang = message.content[len('addlang ')+1:]
+            print(lang)
     
     #Other events
     else:
