@@ -6,6 +6,7 @@ import googletrans
 from dotenv import load_dotenv
 from googletrans import Translator
 from discord.utils import get
+from extra import *
 
 
 #global vars from .env
