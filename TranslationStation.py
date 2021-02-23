@@ -18,8 +18,13 @@ intents = discord.Intents.all() #give bot all intents/permissions
 client = discord.Client(intents = intents)
 
 #Globals
-flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'jp':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷'}
+# english, spanish, japanese, germna, french, chinese (simplified),
+# hindi, arabic, bengali, russian, portuguese, indonesian
+flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷',
+              'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺'}#,
+              #'pt':'🇵🇹', 'id':'🇮🇩'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
+print(len(flagEmojis))
 
 #startup event
 @client.event
