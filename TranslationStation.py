@@ -21,12 +21,10 @@ client = discord.Client(intents = intents)
 #Globals
 # english, spanish, japanese, germna, french, chinese (simplified),
 # hindi, arabic, bengali, russian, portuguese, indonesian
-flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷',
-              'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺',
-              'pt':'🇵🇹', 'id':'🇮🇩'}
-activeFlagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷',
-                   'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺'}
-flagEmojisR = {i: d for d, i in activeFlagEmojis.items()}
+flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷', 'zh-cn':'🇨🇳',
+              'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩'}
+flagEmojisR = {i: d for d, i in flagEmojis.items()}
+activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 
 #startup event
 @client.event
@@ -66,8 +64,8 @@ async def on_message(message):
         #Lang roles self-service
         if command == 'langs':# and message.channel.name == 'choose_language':
             m = await message.channel.send('React to this message to choose your language(s).')
-            for flag in flagEmojis:
-                await m.add_reaction(activeFlagEmojis.get(flag))
+            for lang in activeLangs:
+                await m.add_reaction(flagEmojis.get(lang))
 
         elif command.startswith('addlang'):
             lang = removeprefix(command, 'addlang')
