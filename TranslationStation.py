@@ -71,17 +71,31 @@ async def on_message(message):
             lang = removeprefix(command, 'addlang').lower()
             
             #get lang as langcode
-            if lang in googletrans.LANGUAGES: pass
+            if lang in googletrans.LANGUAGES:
+                langName = googletrans.LANGUAGES[lang]
             elif lang in googletrans.LANGCODES:
+                langName = lang
                 lang = googletrans.LANGCODES[lang]
             else: #bad input
                 await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
             
             if lang in activeLangs: #lang already active
-                    await message.channel.send(f'{googletrans.LANGUAGES[lang].title()} is already an active language')    
+                    await message.channel.send(f'{langName.title()} is already an active language')    
                     return
 
-            #await create_text_channel(googletrans.LANGUAGES[en], category = )
+            '''Automate setup for new lang'''
+            
+            #is this good practice, why not global?
+            guild = discord.utils.get(client.guilds, name = GUILD)
+
+            #create role
+            await guild.create_role(name = langName) #add random color would be nice
+
+            #create channel
+            # await create_text_channel(langName, 
+            #     category = guild.categories.get(name = 'general'))
+
+            await message.channel.send(f'{langName.title()} role and channels successfully created.')
             #
     
 
