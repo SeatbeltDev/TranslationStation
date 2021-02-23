@@ -49,11 +49,11 @@ async def on_message(message):
     if message.channel.name == 'test': return #ignore test channel
 
     #Lang roles self-service
-    flagEmojis = ['🇬🇧', '🇪🇸', '🇯🇵', '🇩🇪', '🇫🇷']
-    if message.channel.name == 'choose_language' and message.content == 'langs':
+    flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'jp':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷'}
+    if message.content == '*langs' and message.channel.name == 'choose_language':
         m = await message.channel.send('React to this message to choose your language(s).')
         for flag in flagEmojis:
-            await m.add_reaction(flag)
+            await m.add_reaction(flagEmojis.get(flag))
         return
 
 
