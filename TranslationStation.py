@@ -65,13 +65,26 @@ async def on_message(message):
         if command == 'langs':# and message.channel.name == 'choose_language':
             m = await message.channel.send('React to this message to choose your language(s).')
             for lang in activeLangs:
-                await m.add_reaction(flagEmojis.get(lang))
+                await m.add_reaction(flagEmojis[lang])
 
         elif command.startswith('addlang'):
-            lang = removeprefix(command, 'addlang')
-            print(lang)
+            lang = removeprefix(command, 'addlang').lower()
             
+            #get lang as langcode
+            if lang in googletrans.LANGUAGES: pass
+            elif lang in googletrans.LANGCODES:
+                lang = googletrans.LANGCODES[lang]
+            else: #bad input
+                await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
+            
+            if lang in activeLangs: #lang already active
+                    await message.channel.send(f'{googletrans.LANGUAGES[lang].title()} is already an active language')    
+                    return
+
+            #await create_text_channel(googletrans.LANGUAGES[en], category = )
+            #
     
+
     #Other events
     else:
         #Translate and send to each language channel in station
@@ -100,7 +113,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.content == 'React to this message to choose your language(s).':
         if reaction.emoji in flagEmojisR:
             await user.add_roles(get(user.guild.roles,
-                name = googletrans.LANGUAGES[flagEmojisR.get(reaction.emoji)]))
+                name = googletrans.LANGUAGES[flagEmojisR[reaction.emoji]]))
 
 #handle errors - catch bad message and write to file
 @client.event
