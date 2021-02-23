@@ -70,9 +70,9 @@ async def on_message(message):
                 await m.add_reaction(activeFlagEmojis.get(flag))
 
         elif command.startswith('addlang'):
-            print('nice')
-            lang = message.content[len('addlang ')+1:]
+            lang = removeprefix(command, 'addlang')
             print(lang)
+            
     
     #Other events
     else:

@@ -1,4 +1,4 @@
 #Extra/Helper Methods
 
-def poo():
-    print('poo')
+def removeprefix(string, remove):
+    return string[len(remove)+1:]
