@@ -21,10 +21,11 @@ client = discord.Client(intents = intents)
 # english, spanish, japanese, germna, french, chinese (simplified),
 # hindi, arabic, bengali, russian, portuguese, indonesian
 flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷',
-              'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺'}#,
-              #'pt':'🇵🇹', 'id':'🇮🇩'}
-flagEmojisR = {i: d for d, i in flagEmojis.items()}
-print(len(flagEmojis))
+              'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺',
+              'pt':'🇵🇹', 'id':'🇮🇩'}
+activeFlagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷',
+                   'zh-cn':'🇨🇳', 'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺'}
+flagEmojisR = {i: d for d, i in activeFlagEmojis.items()}
 
 #startup event
 @client.event
@@ -57,23 +58,29 @@ async def on_message(message):
     if message.author == client.user: return #ignore bot's own messages
     if message.channel.name == 'test': return #ignore test channel
 
-    #Lang roles self-service
-    if message.content == '*langs' and message.channel.name == 'choose_language':
-        m = await message.channel.send('React to this message to choose your language(s).')
-        for flag in flagEmojis:
-            await m.add_reaction(flagEmojis.get(flag))
-        return
-
-
-    #Translate and send to each language channel in station
-    for ch in message.channel.category.channels:
-        if ch == message.channel: continue #ignore message's channel
-        if ch.name not in googletrans.LANGCODES: continue #ignore non lang channels
-        trans = t.translate(message.content,
-            dest = googletrans.LANGCODES[ch.name]).text
-        response = f'{message.author}: {trans}'
-        await ch.send(response)
-    await message.add_reaction('✅')
+    #Commands
+    if message.content.startswith('*'):
+        command = message.content[1:]
+        print(command)
+        #Lang roles self-service
+        if command == 'langs':# and message.channel.name == 'choose_language':
+            m = await message.channel.send('React to this message to choose your language(s).')
+            for flag in flagEmojis:
+                await m.add_reaction(activeFlagEmojis.get(flag))
+            return
+        #elif command == 'otherthing':
+    
+    #Other events
+    else:
+        #Translate and send to each language channel in station
+        for ch in message.channel.category.channels:
+            if ch == message.channel: continue #ignore message's channel
+            if ch.name not in googletrans.LANGCODES: continue #ignore non lang channels
+            trans = t.translate(message.content,
+                dest = googletrans.LANGCODES[ch.name]).text
+            response = f'{message.author}: {trans}'
+            await ch.send(response)
+        await message.add_reaction('✅')
     
     #SIMPLE TRANSLATE EN>ES
     # trans = t.translate(message.content, dest = 'es').text
