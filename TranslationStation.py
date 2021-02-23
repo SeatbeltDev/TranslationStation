@@ -87,13 +87,18 @@ async def on_message(message):
             
             #is this good practice, why not global?
             guild = discord.utils.get(client.guilds, name = GUILD)
+            activeLangs.append(lang)
 
             #create role
             await guild.create_role(name = langName) #add random color would be nice
 
             #create channel
-            # await create_text_channel(langName, 
-            #     category = guild.categories.get(name = 'general'))
+            print(guild.categories)
+            # print(guild.categories.get(name = 'General'))
+            # await guild.create_text_channel(langName,
+            #     category = guild.categories.get(name = 'GENERAL'))
+            # await guild.create_text_channel(langName,
+            #     category = guild.categories.get(name = 'GENERAL'))
 
             await message.channel.send(f'{langName.title()} role and channels successfully created.')
             #
