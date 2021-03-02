@@ -65,6 +65,7 @@ async def on_member_join(member):
 @client.event
 async def on_message(message):
     global activeLangs
+    guild = discord.utils.get(client.guilds, name = GUILD)
 
     if message.author == client.user: return #ignore bot's own messages
     if message.channel.name == 'test': return #ignore test channel
@@ -83,37 +84,55 @@ async def on_message(message):
             lang = removeprefix(command, 'addlang').lower()
             
             #get lang as langcode
-            if lang in googletrans.LANGUAGES:
-                langName = googletrans.LANGUAGES[lang]
-            elif lang in googletrans.LANGCODES:
-                langName = lang
-                lang = googletrans.LANGCODES[lang]
-            else: #bad input
-                await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
-            
+            # if lang in googletrans.LANGUAGES:
+            #     langName = googletrans.LANGUAGES[lang]
+            # elif lang in googletrans.LANGCODES:
+            #     langName = lang
+            #     lang = googletrans.LANGCODES[lang]
+            # else: #bad input
+            #     await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
+            tLang, tLangName, bad, out = langToCode(lang)
+            lang = tLang
+            langName = tLangName
+            if bad: await message.channel.send(out)
+
             if lang in activeLangs: #lang already active
                     await message.channel.send(f'{langName.title()} is already an active language')    
                     return
 
             '''Automate setup for new lang'''
             
-            #is this good practice, why not global?
-            guild = discord.utils.get(client.guilds, name = GUILD)
             activeLangs.append(lang)
 
             #create role
             await guild.create_role(name = langName) #add random color would be nice
+            print(f'{langName.title()} role created')
 
             #create channel
             # print(guild.categories)
             # print(guild.categories.get(name = 'General'))
             # await guild.create_text_channel(langName,
-            #     category = guild.categories.get(name = 'GENERAL'))
+                # category = guild.categories.get(name = 'GENERAL'))
             # await guild.create_text_channel(langName,
-            #     category = guild.categories.get(name = 'GENERAL'))
+                # category = guild.categories.get(name = 'GENERAL'))
 
             await message.channel.send(f'{langName.title()} role and channels successfully created.')
         
+        # elif command.startswith('rlang'):
+        #     lang = removeprefix(command, 'rlang').lower()
+        #     print('LANG:', lang)
+            
+        #     role = discord.utils.get(guild.roles, name = lang)
+        #     print('ROLE:', role)
+
+        #     #delete role
+        #     activeLangs.remove(lang)
+        #     role.delete()
+        #     print('deleteeted')
+        #     # if lang in 
+
+
+
         elif command == 'stop':
             print('Saving data...')
             
