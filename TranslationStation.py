@@ -91,9 +91,10 @@ async def on_message(message):
                 lang = googletrans.LANGCODES[lang]
             else: #bad input
                 await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
+                return
 
             if lang in activeLangs: #lang already active
-                    await message.channel.send(f'{langName.title()} is already an active language')    
+                    await message.channel.send(f'**{langName.title()}** is already an active language')    
                     return
 
             '''Automate setup for new lang'''
@@ -112,11 +113,11 @@ async def on_message(message):
             # await guild.create_text_channel(langName,
                 # category = guild.categories.get(name = 'GENERAL'))
 
-            await message.channel.send(f'{langName.title()} role and channels successfully created')
+            await message.channel.send(f'**{langName.title()}** role and channels successfully created')
         
         elif command.startswith('rlang'):
             lang = removeprefix(command, 'rlang').lower()
-            
+
             #get lang as langcode (copy/pasted from addlang)
             if lang in googletrans.LANGUAGES:
                 langName = googletrans.LANGUAGES[lang]
@@ -125,17 +126,22 @@ async def on_message(message):
                 lang = googletrans.LANGCODES[lang]
             else: #bad input
                 await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
+                return
 
             role = discord.utils.get(guild.roles, name = langName)
 
             #delete role
             if lang not in activeLangs:
-                await message.channel.send(f'{langName.title()} is not an active language')
-            else:
-                activeLangs.remove(lang)
-                await role.delete()
-                await message.channel.send(f'Removed {langName.title()} role and channels')
-            #
+                await message.channel.send(f'**{langName.title()}** is not an active language')
+                return
+
+            #delete role
+            activeLangs.remove(lang)
+            await role.delete()
+            await message.channel.send(f'Removed **{langName.title()}** role and channels')
+            
+            #delete channels
+            pass
 
         elif command == 'stop':
             print('Saving data...')
