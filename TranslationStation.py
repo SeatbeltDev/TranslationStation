@@ -112,22 +112,30 @@ async def on_message(message):
             # await guild.create_text_channel(langName,
                 # category = guild.categories.get(name = 'GENERAL'))
 
-            await message.channel.send(f'{langName.title()} role and channels successfully created.')
+            await message.channel.send(f'{langName.title()} role and channels successfully created')
         
-        # elif command.startswith('rlang'):
-        #     lang = removeprefix(command, 'rlang').lower()
-        #     print('LANG:', lang)
+        elif command.startswith('rlang'):
+            lang = removeprefix(command, 'rlang').lower()
             
-        #     role = discord.utils.get(guild.roles, name = lang)
-        #     print('ROLE:', role)
+            #get lang as langcode (copy/pasted from addlang)
+            if lang in googletrans.LANGUAGES:
+                langName = googletrans.LANGUAGES[lang]
+            elif lang in googletrans.LANGCODES:
+                langName = lang
+                lang = googletrans.LANGCODES[lang]
+            else: #bad input
+                await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
 
-        #     #delete role
-        #     activeLangs.remove(lang)
-        #     role.delete()
-        #     print('deleteeted')
-        #     # if lang in 
+            role = discord.utils.get(guild.roles, name = langName)
 
-
+            #delete role
+            if lang not in activeLangs:
+                await message.channel.send(f'{langName.title()} is not an active language')
+            else:
+                activeLangs.remove(lang)
+                await role.delete()
+                await message.channel.send(f'Removed {langName.title()} role and channels')
+            #
 
         elif command == 'stop':
             print('Saving data...')
