@@ -3,6 +3,7 @@ import os
 import discord
 import random
 import googletrans
+import csv
 from dotenv import load_dotenv
 from googletrans import Translator
 from discord.utils import get
@@ -29,6 +30,8 @@ activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 #startup event
 @client.event
 async def on_ready():
+    global activeLangs
+
     # for guild in client.guilds:
     #     if guild.name == GUILD: #find our server
     #         break
@@ -40,6 +43,13 @@ async def on_ready():
     )
 
     print ('Members: ' + ', '.join([member.name for member in guild.members]))
+
+    print('Active languages:')
+    with open('data.csv', newline = '') as data:
+                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
+                for row in dataRead:
+                    activeLangs = row
+                    print(activeLangs)
 
 #welcome new members through DM
 @client.event
@@ -54,6 +64,8 @@ async def on_member_join(member):
 #Translate on message
 @client.event
 async def on_message(message):
+    global activeLangs
+
     if message.author == client.user: return #ignore bot's own messages
     if message.channel.name == 'test': return #ignore test channel
 
@@ -93,7 +105,7 @@ async def on_message(message):
             await guild.create_role(name = langName) #add random color would be nice
 
             #create channel
-            print(guild.categories)
+            # print(guild.categories)
             # print(guild.categories.get(name = 'General'))
             # await guild.create_text_channel(langName,
             #     category = guild.categories.get(name = 'GENERAL'))
@@ -101,7 +113,16 @@ async def on_message(message):
             #     category = guild.categories.get(name = 'GENERAL'))
 
             await message.channel.send(f'{langName.title()} role and channels successfully created.')
-            #
+        
+        elif command == 'stop':
+            print('Saving data...')
+            
+            with open('data.csv', 'w', newline = '') as data:
+                dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
+                dataWrite.writerow(activeLangs)
+
+            await client.close()
+            print('Bot shut down')
     
 
     #Other events
