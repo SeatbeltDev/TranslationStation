@@ -94,6 +94,13 @@ async def on_message(message):
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')
 
+        elif command.startswith('addcat'):
+            catName = removeprefix(command, 'addcat') + ' ↔'
+
+            await guild.create_category(catName)
+            # print(guild.categories.get(name = catName))
+
+
         elif command.startswith('addlang'):
             #maybe allow multiple langs i.e. 'addlang id pt'
             lang = removeprefix(command, 'addlang')

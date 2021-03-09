@@ -1,8 +1,3 @@
-add and remove channels in General category when new lang added/removed
-
-expand to all translated categories
-	keep track of t-categories (csv?)
-		check all categories on open/close?
-		maybe use a tag in category name to help
-			'General ↔️'
-
+create category command
+	'*addcat gaming'
+	create channels for all active langs
