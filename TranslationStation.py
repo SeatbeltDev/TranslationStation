@@ -145,7 +145,7 @@ async def on_message(message):
 
         elif command == 'stop':
             print('Saving data...')
-            
+            #
             with open('data.csv', 'w', newline = '') as data:
                 dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
                 dataWrite.writerow(activeLangs)
