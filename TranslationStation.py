@@ -72,16 +72,21 @@ async def on_message(message):
 
     #Commands
     if message.content.startswith('*'):
-        command = message.content[1:]
+        command = message.content[1:].lower()
 
         #Lang roles self-service
         if command == 'langs':# and message.channel.name == 'choose_language':
             m = await message.channel.send('React to this message to choose your language(s).')
             for lang in activeLangs:
                 await m.add_reaction(flagEmojis[lang])
+        
+        elif command == 'alangs':
+            unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
+            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')
 
         elif command.startswith('addlang'):
-            lang = removeprefix(command, 'addlang').lower()
+            #maybe allow multiple langs i.e. 'addlang id pt'
+            lang = removeprefix(command, 'addlang')
             
             #get lang as langcode
             if lang in googletrans.LANGUAGES:
@@ -116,7 +121,8 @@ async def on_message(message):
             await message.channel.send(f'**{langName.title()}** role and channels successfully created')
         
         elif command.startswith('rlang'):
-            lang = removeprefix(command, 'rlang').lower()
+            #maybe multiple langs i.e. 'rlang id pt'
+            lang = removeprefix(command, 'rlang')
 
             #get lang as langcode (copy/pasted from addlang)
             if lang in googletrans.LANGUAGES:
@@ -145,7 +151,7 @@ async def on_message(message):
 
         elif command == 'stop':
             print('Saving data...')
-            #
+            
             with open('data.csv', 'w', newline = '') as data:
                 dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
                 dataWrite.writerow(activeLangs)
