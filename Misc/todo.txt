@@ -5,3 +5,4 @@ expand to all translated categories
 		check all categories on open/close?
 		maybe use a tag in category name to help
 			'General ↔️'
+

@@ -56,6 +56,7 @@ async def on_ready():
     print('Translated categories:')
     for cat in guild.categories:
         if '↔' in cat.name:
+            tCategories.append(cat)
             print(cat.name)
     
 
@@ -119,13 +120,10 @@ async def on_message(message):
             await guild.create_role(name = langName) #add random color would be nice
             print(f'{langName.title()} role created')
 
-            #create channel
-            # print(guild.categories)
-            # print(guild.categories.get(name = 'General ↔️'))
-            # await guild.create_text_channel(langName,
-                # category = guild.categories.get(name = 'GENERAL'))
-            # await guild.create_text_channel(langName,
-                # category = guild.categories.get(name = 'GENERAL'))
+            #create channels
+            for cat in tCategories:
+                await cat.create_text_channel(langName)
+            print(f'{langName.title()} channels created')
 
             await message.channel.send(f'**{langName.title()}** role and channels successfully created')
         
@@ -145,18 +143,24 @@ async def on_message(message):
 
             role = discord.utils.get(guild.roles, name = langName)
 
-            #delete role
             if lang not in activeLangs:
                 await message.channel.send(f'**{langName.title()}** is not an active language')
                 return
+            
+            #remove from active
+            activeLangs.remove(lang)
 
             #delete role
-            activeLangs.remove(lang)
             await role.delete()
             await message.channel.send(f'Removed **{langName.title()}** role and channels')
             
             #delete channels
-            pass
+            for cat in tCategories:
+                for chan in cat.channels:
+                    if chan.name == langName:
+                        await chan.delete()
+                # await cat.create_text_channel(langName)
+            print(f'{langName.title()} channels removed')
 
         elif command == 'stop':
             print('Saving data...')
