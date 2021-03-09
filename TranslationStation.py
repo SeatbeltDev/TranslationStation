@@ -26,11 +26,13 @@ flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪'
               'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
 activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
+tCategories = []
 
 #startup event
 @client.event
 async def on_ready():
     global activeLangs
+    global tCategories
 
     # for guild in client.guilds:
     #     if guild.name == GUILD: #find our server
@@ -50,6 +52,12 @@ async def on_ready():
                 for row in dataRead:
                     activeLangs = row
                     print(activeLangs)
+    
+    print('Translated categories:')
+    for cat in guild.categories:
+        if '↔' in cat.name:
+            print(cat.name)
+    
 
 #welcome new members through DM
 @client.event
@@ -65,6 +73,7 @@ async def on_member_join(member):
 @client.event
 async def on_message(message):
     global activeLangs
+    global tCategories
     guild = discord.utils.get(client.guilds, name = GUILD)
 
     if message.author == client.user: return #ignore bot's own messages
@@ -112,7 +121,7 @@ async def on_message(message):
 
             #create channel
             # print(guild.categories)
-            # print(guild.categories.get(name = 'General'))
+            # print(guild.categories.get(name = 'General ↔️'))
             # await guild.create_text_channel(langName,
                 # category = guild.categories.get(name = 'GENERAL'))
             # await guild.create_text_channel(langName,
