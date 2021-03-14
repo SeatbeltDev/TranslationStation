@@ -95,11 +95,18 @@ async def on_message(message):
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')
 
         elif command.startswith('addcat'):
-            catName = removeprefix(command, 'addcat') + ' ↔'
+            categoryName = removeprefix(command, 'addcat') + ' ↔'
 
-            await guild.create_category(catName)
-            # print(guild.categories.get(name = catName))
+            newCategory = await guild.create_category(categoryName)
+            tCategories.append(newCategory)
 
+            for lang in activeLangs:
+                await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
+            
+            print(f'{newCategory} category created and populated with active language categories.')
+        
+        elif command.startswith('rcat'):
+            pass
 
         elif command.startswith('addlang'):
             #maybe allow multiple langs i.e. 'addlang id pt'

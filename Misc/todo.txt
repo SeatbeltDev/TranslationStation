@@ -1,3 +1,10 @@
 create category command
 	'*addcat gaming'
 	create channels for all active langs
+
+fix chinese-simplified lang channel
+	can't have parens in channel names
+	maybe modify to remove dash and add parens?
+	check for other paren lang names in googletrans
+	
+check permissions for adding/removing langs and making categories
