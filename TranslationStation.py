@@ -106,7 +106,16 @@ async def on_message(message):
             print(f'{newCategory} category created and populated with active language categories.')
         
         elif command.startswith('rcat'):
-            pass
+            categoryName = removeprefix(command, 'rcat') + ' ↔'
+
+            #TODO clean up, get category from tCategories[] instead of just grabbing it
+            cat = discord.utils.get(tCategories, name = categoryName)
+
+            #TODO delete all channels in cat first, else they remain in no category at top
+            await cat.delete()
+            tCategories.remove(cat)
+
+            await message.channel.send(f'{cat} category removed.')
 
         elif command.startswith('addlang'):
             #maybe allow multiple langs i.e. 'addlang id pt'
