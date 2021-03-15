@@ -92,7 +92,7 @@ async def on_message(message):
         
         elif command == 'alangs':
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
-            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')
+            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}\nTranslated Categories: {tCategories}')
 
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
@@ -110,8 +110,12 @@ async def on_message(message):
 
             #TODO clean up, get category from tCategories[] instead of just grabbing it
             cat = discord.utils.get(tCategories, name = categoryName)
+            
+            #delete all channels in cat first
+            for chan in cat.channels:
+                await chan.delete()
 
-            #TODO delete all channels in cat first, else they remain in no category at top
+            #delete cat
             await cat.delete()
             tCategories.remove(cat)
 

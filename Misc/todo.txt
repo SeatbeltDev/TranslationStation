@@ -7,3 +7,5 @@ fix chinese-simplified lang channel
 check permissions for adding/removing langs and making categories
 
 fix *rlang
+
+Something may be wrong with add/remove lang channels when add/remove active lang
