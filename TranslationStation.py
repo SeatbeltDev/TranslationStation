@@ -92,7 +92,7 @@ async def on_message(message):
         
         elif command == 'alangs':
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
-            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}\nTranslated Categories: {tCategories}')
+            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
 
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
