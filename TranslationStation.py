@@ -100,12 +100,15 @@ async def on_message(message):
             newCategory = await guild.create_category(categoryName)
             tCategories.append(newCategory)
 
+            #create channel and set view permissions
             for lang in activeLangs:
-                tempChan = await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
-                print(tempChan)
-                role = discord.utils.get(guild.roles, name = tempChan.name)
-                await tempChan.set_permissions(guild.default_role, view_channel = False)
-                await tempChan.set_permissions(role, view_channel = True)
+                chan = await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
+                role = discord.utils.get(guild.roles, name = chan.name)
+
+                #default role cannot view
+                await chan.set_permissions(guild.default_role, view_channel = False)
+                #lang role can view
+                await chan.set_permissions(role, view_channel = True)
             
             print(f'{newCategory} category created and populated with active language categories.')
         
@@ -153,7 +156,13 @@ async def on_message(message):
 
             #create channels
             for cat in tCategories:
-                await cat.create_text_channel(langName)
+                chan = await cat.create_text_channel(langName)
+                role = discord.utils.get(guild.roles, name = chan.name)
+
+                #default role cannot view
+                await chan.set_permissions(guild.default_role, view_channel = False)
+                #lang role can view
+                await chan.set_permissions(role, view_channel = True)
             print(f'{langName.title()} channels created')
 
             await message.channel.send(f'**{langName.title()}** role and channels successfully created')

@@ -6,8 +6,10 @@ fix chinese-simplified lang channel
 	
 check permissions for adding/removing langs and making categories
 
-fix *rlang
+clean up *rlang
 
-Something may be wrong with add/remove lang channels when add/remove active lang
+transfer emojis betweens langs
 
-role restrictions on channels in new categories
+add multiple langs/categories at a time
+
+add more possible langs
