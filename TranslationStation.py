@@ -58,6 +58,9 @@ async def on_ready():
         if '↔' in cat.name:
             tCategories.append(cat)
             print(cat.name)
+
+    botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
+    await botChannel.send('Howdy')
     
 
 #welcome new members through DM
@@ -83,9 +86,12 @@ async def on_message(message):
     #Commands
     if message.content.startswith('*'):
         command = message.content[1:].lower()
+        
+        if command == 'help':
+            await message.channel.send(helpText)
 
         #Lang roles self-service
-        if command == 'langs':# and message.channel.name == 'choose_language':
+        elif command == 'langs':# and message.channel.name == 'choose_language':
             m = await message.channel.send('React to this message to choose your language(s).')
             for lang in activeLangs:
                 await m.add_reaction(flagEmojis[lang])
