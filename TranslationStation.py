@@ -101,7 +101,11 @@ async def on_message(message):
             tCategories.append(newCategory)
 
             for lang in activeLangs:
-                await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
+                tempChan = await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
+                print(tempChan)
+                role = discord.utils.get(guild.roles, name = tempChan.name)
+                await tempChan.set_permissions(guild.default_role, view_channel = False)
+                await tempChan.set_permissions(role, view_channel = True)
             
             print(f'{newCategory} category created and populated with active language categories.')
         
