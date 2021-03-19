@@ -91,7 +91,7 @@ async def on_message(message):
             await message.channel.send(helpText)
 
         #Lang roles self-service
-        elif command == 'langs':# and message.channel.name == 'choose_language':
+        elif command == 'langs':
             m = await message.channel.send('React to this message to choose your language(s).')
             for lang in activeLangs:
                 await m.add_reaction(flagEmojis[lang])
@@ -134,6 +134,16 @@ async def on_message(message):
 
             await message.channel.send(f'{cat} category removed.')
 
+        elif command.startswith('addlangs'):
+            langs = removeprefix(command, 'addlang').split()
+
+            for lang in langs:
+                msg = f'*addlang {lang}'
+                print(f'Calling message: ({msg})')
+                # msg = discord.Message(content = '*')
+                print(f'Message object: {msg}')
+                await on_message(msg)
+
         elif command.startswith('addlang'):
             #maybe allow multiple langs i.e. 'addlang id pt'
             lang = removeprefix(command, 'addlang')
@@ -172,7 +182,7 @@ async def on_message(message):
             print(f'{langName.title()} channels created')
 
             await message.channel.send(f'**{langName.title()}** role and channels successfully created')
-        
+
         elif command.startswith('rlang'):
             #maybe multiple langs i.e. 'rlang id pt'
             lang = removeprefix(command, 'rlang')
