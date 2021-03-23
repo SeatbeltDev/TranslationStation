@@ -90,7 +90,8 @@ async def on_message(message):
         if command == 'help':
             await message.channel.send(helpText)
 
-        #Lang roles self-service
+        #General User Commands
+
         elif command == 'langs':
             m = await message.channel.send('React to this message to choose your language(s).')
             for lang in activeLangs:
@@ -99,6 +100,17 @@ async def on_message(message):
         elif command == 'alangs':
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
+        
+        #Admin Commands
+        elif command == 'stinky':
+            print(message.author.roles)
+            print(role.name == 'Admin' for role in message.author.roles)
+            # for role in message.author.roles:
+            #     print(role.name)
+            #     if role.name == 'Admin'
+            # if message.author.
+            #     await message.channel.send('You don\'t have permission to use that command')
+            #     return
 
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
