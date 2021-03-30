@@ -81,7 +81,7 @@ async def on_message(message):
     guild = discord.utils.get(client.guilds, name = GUILD)
 
     if message.author == client.user: return #ignore bot's own messages
-    if message.channel.name == 'test': return #ignore test channel
+    # if message.channel.name == 'test': return #ignore test channel
 
     #Commands
     if message.content.startswith('*'):
@@ -112,9 +112,12 @@ async def on_message(message):
             # test webhook message thing
             msg = removeprefix(command, 'th')
 
+            print(f'About to try sending webhook msg: {msg}')
             profilePic = await message.author.avatar_url.read()
+            print('middle')
             webhook = await message.channel.create_webhook(name = message.author.display_name, avatar = profilePic)
 
+            print(f'Sending webhook message: {msg}')
             await webhook.send(msg)
             await webhook.delete()
 
@@ -253,10 +256,19 @@ async def on_message(message):
         for ch in message.channel.category.channels:
             if ch == message.channel: continue #ignore message's channel
             if ch.name not in googletrans.LANGCODES: continue #ignore non lang channels
-            trans = t.translate(message.content,
+
+            translatedMsg = t.translate(message.content,
                 dest = googletrans.LANGCODES[ch.name]).text
-            response = f'{message.author}: {trans}'
+
+            response = f'{message.author}: {translatedMsg}'
             await ch.send(response)
+
+            # profilePic = await message.author.avatar_url.read()
+            # webhook = await ch.create_webhook(name = message.author.display_name, avatar = profilePic)
+
+            # await webhook.send(translatedMsg)
+            # await webhook.delete()
+
         await message.add_reaction('✅')
     
     #SIMPLE TRANSLATE EN>ES

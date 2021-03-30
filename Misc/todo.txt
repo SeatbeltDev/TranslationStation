@@ -1,8 +1,9 @@
 
 fix chinese-simplified lang channel
-	can't have parens in channel names
+	can't have parens in discord channel names
 	maybe modify to remove dash and add parens?
 	check for other paren lang names in googletrans
+	*addlang zh-ch adds the channel only to general cat, rlang does nothing
 	
 clean up *rlang
 
@@ -13,6 +14,8 @@ add multiple langs/categories at a time
 add more possible langs
 
 webhook/clean messages
+	had a test webhook message working
+	implemented to translated msgs, it spammed, now webhooks don't work
 
 
 --- COMPLETED TASKS BELOW ---
