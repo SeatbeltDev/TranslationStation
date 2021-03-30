@@ -80,8 +80,8 @@ async def on_message(message):
     global tCategories
     guild = discord.utils.get(client.guilds, name = GUILD)
 
-    if message.author == client.user: return #ignore bot's own messages
-    # if message.channel.name == 'test': return #ignore test channel
+    # if message.author == client.user: return #ignore bot's own messages
+    if message.author.bot: return #ignore bot's own messages
 
     #Commands
     if message.content.startswith('*'):
@@ -102,6 +102,7 @@ async def on_message(message):
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
         
         #Admin Commands
+
         elif discord.utils.get(message.author.roles, name = 'Admin') is None:
             # stop here if user doesn't have 'Admin' role
             print(f'{message.author.name} tried to use "{message.content}" command.')
