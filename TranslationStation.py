@@ -102,15 +102,11 @@ async def on_message(message):
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
         
         #Admin Commands
-        elif command == 'stinky':
-            print(message.author.roles)
-            print(role.name == 'Admin' for role in message.author.roles)
-            # for role in message.author.roles:
-            #     print(role.name)
-            #     if role.name == 'Admin'
-            # if message.author.
-            #     await message.channel.send('You don\'t have permission to use that command')
-            #     return
+        elif discord.utils.get(message.author.roles, name = 'Admin') is None:
+            # stop here if user doesn't have 'Admin' role
+            print(f'{message.author.name} tried to use "{message.content}" command.')
+            await message.channel.send('You do not have permission to use that command.')
+            return
 
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'

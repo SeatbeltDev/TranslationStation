@@ -4,8 +4,6 @@ fix chinese-simplified lang channel
 	maybe modify to remove dash and add parens?
 	check for other paren lang names in googletrans
 	
-check permissions for adding/removing langs and making categories
-
 clean up *rlang
 
 transfer emojis betweens langs
@@ -13,3 +11,8 @@ transfer emojis betweens langs
 add multiple langs/categories at a time
 
 add more possible langs
+
+
+--- COMPLETED TASKS BELOW ---
+
+check permissions for adding/removing langs and making categories
