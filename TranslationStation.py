@@ -108,6 +108,16 @@ async def on_message(message):
             await message.channel.send('You do not have permission to use that command.')
             return
 
+        elif command.startswith('th'):
+            # test webhook message thing
+            msg = removeprefix(command, 'th')
+
+            profilePic = await message.author.avatar_url.read()
+            webhook = await message.channel.create_webhook(name = message.author.display_name, avatar = profilePic)
+
+            await webhook.send(msg)
+            await webhook.delete()
+
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
 
