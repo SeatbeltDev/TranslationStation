@@ -28,7 +28,7 @@ flagEmojisR = {i: d for d, i in flagEmojis.items()}
 activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 tCategories = []
 
-#startup event
+#Startup event
 @client.event
 async def on_ready():
     global activeLangs
@@ -63,7 +63,7 @@ async def on_ready():
     await botChannel.send('Howdy')
     
 
-#welcome new members through DM
+#Welcome new members through DM
 @client.event
 async def on_member_join(member):
     await member.create_dm()
@@ -87,10 +87,10 @@ async def on_message(message):
     if message.content.startswith('*'):
         command = message.content[1:].lower()
         
+        #General User Commands
+        
         if command == 'help':
             await message.channel.send(helpText)
-
-        #General User Commands
 
         elif command == 'langs':
             m = await message.channel.send('React to this message to choose your language(s).')
@@ -111,6 +111,12 @@ async def on_message(message):
 
         elif command.startswith('th'):
             # test webhook message thing
+
+            # trying declaring webhook other way so it can stay open
+            
+
+
+            # old way
             msg = removeprefix(command, 'th')
 
             print(f'About to try sending webhook msg: {msg}')
@@ -271,15 +277,9 @@ async def on_message(message):
             # await webhook.delete()
 
         await message.add_reaction('✅')
-    
-    #SIMPLE TRANSLATE EN>ES
-    # trans = t.translate(message.content, dest = 'es').text
-    # response = f'{message.author}: {trans}'
-    # channel = client.get_channel(803733879391256587) #change channel
-    # await channel.send(response)
-    # await message.add_reaction('✅')
 
-#Respons to reactions
+
+#Respond to reactions
 @client.event
 async def on_reaction_add(reaction, user):
     #print(user.name)
@@ -290,7 +290,7 @@ async def on_reaction_add(reaction, user):
             await user.add_roles(get(user.guild.roles,
                 name = googletrans.LANGUAGES[flagEmojisR[reaction.emoji]]))
 
-#handle errors - catch bad message and write to file
+#Handle errors - catch bad message and write to file
 @client.event
 async def on_error(event, *args, **kwargs):
     with open('err.log', 'a') as f:

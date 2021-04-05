@@ -17,6 +17,8 @@ webhook/clean messages
 	had a test webhook message working
 	implemented to translated msgs, it spammed, now webhooks don't work
 
+fix active langs not loading up properly on first startup
+
 
 --- COMPLETED TASKS BELOW ---
 
