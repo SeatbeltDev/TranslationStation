@@ -297,6 +297,6 @@ async def on_error(event, *args, **kwargs):
         if event == 'on_message':
             f.write(f'Undhandled message: {args[0]}\n')
         else:
-            raise
+            pass #raise
 
 client.run(TOKEN)

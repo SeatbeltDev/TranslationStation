@@ -19,6 +19,9 @@ webhook/clean messages
 
 fix active langs not loading up properly on first startup
 
+change admin check to generic admin permissions
+	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin
+
 
 --- COMPLETED TASKS BELOW ---
 
