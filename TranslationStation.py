@@ -272,10 +272,20 @@ async def on_message(message):
 
             translatedMsg = t.translate(message.content,
                 dest = googletrans.LANGCODES[ch.name]).text
+            
+            # TEXT OPTION
+            # response = f'{message.author}: {translatedMsg}'
+            # await ch.send(response)
 
-            response = f'{message.author}: {translatedMsg}'
-            await ch.send(response)
+            # EMBED OPTION
+            embed = discord.Embed(description = translatedMsg)
+            
+            embed.set_author(name = message.author.display_name,
+                icon_url = message.author.avatar_url)
+            
+            await ch.send(embed = embed)
 
+            # WEBHOOK OPTIOB
             # profilePic = await message.author.avatar_url.read()
             # webhook = await ch.create_webhook(name = message.author.display_name, avatar = profilePic)
 
