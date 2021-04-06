@@ -26,6 +26,11 @@ webhook/clean messages
 	had a test webhook message working
 	implemented to translated msgs, it spammed, now webhooks don't work
 
+multithreading?
+	https://stackoverflow.com/questions/7207309/how-to-run-functions-in-parallel/7207336#7207336
+
+restructure commands so *asdfasdf for test account says 'invalid' instead of 'you do not have permission'
+
 
 --- KNOWN ISSUES ---
 

@@ -7,6 +7,7 @@ import csv
 from dotenv import load_dotenv
 from googletrans import Translator
 from discord.utils import get
+from discord.ext.commands import has_guild_permissions
 from extra import *
 
 
@@ -102,8 +103,8 @@ async def on_message(message):
             await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
         
         #Admin Commands
-
-        elif discord.utils.get(message.author.roles, name = 'Admin') is None:
+        
+        elif not message.author.permissions_in(message.channel).administrator:
             # stop here if user doesn't have 'Admin' role
             print(f'{message.author.name} tried to use "{message.content}" command.')
             await message.channel.send('You do not have permission to use that command.')
@@ -259,6 +260,7 @@ async def on_message(message):
                 dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
                 dataWrite.writerow(activeLangs)
 
+            await message.channel.send('Buh bye!')
             await client.close()
             print('Bot shut down')
     
