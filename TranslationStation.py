@@ -109,14 +109,20 @@ async def on_message(message):
             await message.channel.send('You do not have permission to use that command.')
             return
 
-        elif command.startswith('th'):
-            # test webhook message thing
+        elif command.startswith('emb'):
+            msg = removeprefix(command, 'emb')
 
-            # trying declaring webhook other way so it can stay open
+            embed = discord.Embed(description = msg)
             
+            embed.set_author(name = message.author.display_name,
+                icon_url = message.author.avatar_url)
+            
+            await message.channel.send(embed = embed)
 
+        elif command.startswith('th'):
+            # Testing webhooks
+            # This isn't going to work for the final product
 
-            # old way
             msg = removeprefix(command, 'th')
 
             print(f'About to try sending webhook msg: {msg}')

@@ -1,26 +1,36 @@
+--- FROM MOST TO LEAST IMPORTANT ---
+
+
+fix active langs not loading up properly on first startup
+
+change admin check to generic admin permissions
+	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin
 
 fix chinese-simplified lang channel
 	can't have parens in discord channel names
 	maybe modify to remove dash and add parens?
 	check for other paren lang names in googletrans
 	*addlang zh-ch adds the channel only to general cat, rlang does nothing
-	
+
+add more possible langs
+
+
+
 clean up *rlang
 
 transfer emojis betweens langs
 
 add multiple langs/categories at a time
 
-add more possible langs
-
 webhook/clean messages
 	had a test webhook message working
 	implemented to translated msgs, it spammed, now webhooks don't work
 
-fix active langs not loading up properly on first startup
 
-change admin check to generic admin permissions
-	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin
+--- KNOWN ISSUES ---
+
+the bot is single-threaded, i.e. it can only translate one message at a time. other messages, even in other categories, must wait in line if a message is currently being translated. I don't know of a way to speed this up
+
 
 
 --- COMPLETED TASKS BELOW ---
