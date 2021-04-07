@@ -1,13 +1,11 @@
 #Translation Station Discord Bot
 import os
 import discord
-import random
 import googletrans
 import csv
 from dotenv import load_dotenv
 from googletrans import Translator
 from discord.utils import get
-from discord.ext.commands import has_guild_permissions
 from extra import *
 
 
