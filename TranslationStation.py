@@ -112,8 +112,10 @@ async def on_message(message):
                 await m.add_reaction(flagEmojis[lang])
         
         elif command == 'alangs':
+            aLangsNames = langCodesListToString(activeLangs)
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
-            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
+            unusedLangsPretty = langCodesListToString(unusedLangs)
+            await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
         
         #Admin Commands
         
