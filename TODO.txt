@@ -3,9 +3,6 @@
 
 fix active langs not loading up properly on first startup
 
-change admin check to generic admin permissions
-	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin
-
 fix chinese-simplified lang channel
 	can't have parens in discord channel names
 	maybe modify to remove dash and add parens?
@@ -41,3 +38,6 @@ the bot is single-threaded, i.e. it can only translate one message at a time. ot
 --- COMPLETED TASKS BELOW ---
 
 check permissions for adding/removing langs and making categories
+
+change admin check to generic admin permissions
+	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin

@@ -7,7 +7,6 @@ import csv
 from dotenv import load_dotenv
 from googletrans import Translator
 from discord.utils import get
-from discord.ext.commands import has_guild_permissions
 from extra import *
 
 
@@ -26,7 +25,7 @@ client = discord.Client(intents = intents)
 flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷', 'zh-cn':'🇨🇳',
               'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
-activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
+activeLangs = [] #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 tCategories = []
 
 #Startup event
@@ -47,12 +46,6 @@ async def on_ready():
 
     print ('Members: ' + ', '.join([member.name for member in guild.members]))
 
-    print('Active languages:')
-    with open('data.csv', newline = '') as data:
-                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
-                for row in dataRead:
-                    activeLangs = row
-                    print(activeLangs)
     
     print('Translated categories:')
     for cat in guild.categories:
@@ -60,8 +53,25 @@ async def on_ready():
             tCategories.append(cat)
             print(cat.name)
 
+    print('Active languages:')
+    if (len(tCategories) == 0):
+        print('Loading active languages from memory')
+        with open('data.csv', newline = '') as data:
+                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
+                for row in dataRead:
+                    activeLangs = row
+                    print(activeLangs)
+    else:
+        for lang in tCategories[0].channels:
+            langName = lang.name
+            langCode = googletrans.LANGCODES[langName]
+            # print(f'{langName}, {langCode}')
+            activeLangs.append(langCode)
+        print(activeLangs)
+
     botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
     await botChannel.send('Howdy')
+    print('Bot ready!')
     
 
 #Welcome new members through DM
