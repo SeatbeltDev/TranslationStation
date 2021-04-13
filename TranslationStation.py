@@ -23,7 +23,9 @@ client = discord.Client(intents = intents)
 # english, spanish, japanese, germna, french, chinese (simplified),
 # hindi, arabic, bengali, russian, portuguese, indonesian
 flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷', 'zh-cn':'🇨🇳',
-              'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩'}
+              'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩',
+              'af':'🇿🇦', 'haw':'🏝️', 'ko':'🇰🇷', 'he':'🇮🇱', 'ga':'🇮🇪', 'it':'🇮🇹',
+              'is':'🇮🇸', 'vi':'🇻🇳'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
 activeLangs = [] #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 tCategories = []
@@ -33,7 +35,7 @@ tCategories = []
 async def on_ready():
     global activeLangs
     global tCategories
-
+    
     # for guild in client.guilds:
     #     if guild.name == GUILD: #find our server
     #         break
@@ -44,9 +46,10 @@ async def on_ready():
         f'{guild.name} (id: {guild.id})'
     )
 
-    print ('Members: ' + ', '.join([member.name for member in guild.members]))
+    print('Members: ' + ', '.join([member.name for member in guild.members]))
 
-    
+    # Memory prep
+
     print('Translated categories:')
     for cat in guild.categories:
         if '↔' in cat.name:
@@ -297,7 +300,7 @@ async def on_message(message):
             
             await ch.send(embed = embed)
 
-            # WEBHOOK OPTIOB
+            # WEBHOOK OPTION
             # profilePic = await message.author.avatar_url.read()
             # webhook = await ch.create_webhook(name = message.author.display_name, avatar = profilePic)
 
