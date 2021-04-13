@@ -48,7 +48,24 @@ async def on_ready():
 
     print('Members: ' + ', '.join([member.name for member in guild.members]))
 
-    # Memory prep
+    # Startup Prep
+
+    for lang in googletrans.LANGCODES:
+        if '(' in lang:
+            print(lang)
+            newName = lang
+            for char in lang:
+                if char == ' ':
+                    continue
+                elif char == '(':
+                    newName += '-'
+                    continue
+                elif char == ')':
+                    continue
+                newName += char
+            print(newName)
+    googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
+    googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
 
     print('Translated categories:')
     for cat in guild.categories:

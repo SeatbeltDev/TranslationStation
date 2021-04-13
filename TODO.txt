@@ -7,13 +7,13 @@ fix chinese-simplified lang channel
 	check for other paren lang names in googletrans
 	*addlang zh-ch adds the channel only to general cat, rlang does nothing
 
-add more possible langs
+add MORE possible langs manually (any way to automate getting the flag emoji?)
 
 
 
 clean up *rlang
 
-transfer emojis betweens langs
+transfer reactions betweens langs
 
 add multiple langs/categories at a time
 
