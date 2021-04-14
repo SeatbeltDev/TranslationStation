@@ -1,35 +1,31 @@
 --- FROM MOST TO LEAST IMPORTANT ---
 
 
-fix active langs not loading up properly on first startup
-
-change admin check to generic admin permissions
-	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin
-
 fix chinese-simplified lang channel
 	can't have parens in discord channel names
 	maybe modify to remove dash and add parens?
 	check for other paren lang names in googletrans
 	*addlang zh-ch adds the channel only to general cat, rlang does nothing
 
-add more possible langs
+add MORE possible langs manually (any way to automate getting the flag emoji?)
 
 
 
 clean up *rlang
 
-transfer emojis betweens langs
+transfer reactions betweens langs
 
 add multiple langs/categories at a time
 
-webhook/clean messages
-	had a test webhook message working
-	implemented to translated msgs, it spammed, now webhooks don't work
+
 
 multithreading?
 	https://stackoverflow.com/questions/7207309/how-to-run-functions-in-parallel/7207336#7207336
 
 restructure commands so *asdfasdf for test account says 'invalid' instead of 'you do not have permission'
+
+add support for pirate speak
+	https://pypi.org/project/arrr/
 
 
 --- KNOWN ISSUES ---
@@ -40,4 +36,14 @@ the bot is single-threaded, i.e. it can only translate one message at a time. ot
 
 --- COMPLETED TASKS BELOW ---
 
+REPLACED WITH EMBEDS
+webhook/clean messages
+	had a test webhook message working
+	implemented to translated msgs, it spammed, now webhooks don't work
+
+fix active langs not loading up properly on first startup
+
 check permissions for adding/removing langs and making categories
+
+change admin check to generic admin permissions
+	https://stackoverflow.com/questions/51240878/discord-bot-check-if-user-is-admin

@@ -1,7 +1,14 @@
 #Extra/Helper Methods
+import googletrans
 
 def removeprefix(string, remove):
     return string[len(remove)+1:]
+
+def langCodesListToString(langs):
+    outList = ''
+    for lang in langs:
+        outList += f'{googletrans.LANGUAGES[lang].title()}, '
+    return outList[:-2]
 
 helpText = '''
 **Welcome to Translation Station Help!**

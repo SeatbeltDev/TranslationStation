@@ -22,9 +22,11 @@ client = discord.Client(intents = intents)
 # english, spanish, japanese, germna, french, chinese (simplified),
 # hindi, arabic, bengali, russian, portuguese, indonesian
 flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪', 'fr':'🇫🇷', 'zh-cn':'🇨🇳',
-              'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩'}
+              'hi':'🇮🇳', 'ar':'🇸🇦', 'bn':'🇧🇩', 'ru':'🇷🇺', 'pt':'🇵🇹', 'id':'🇮🇩',
+              'af':'🇿🇦', 'haw':'🏝️', 'ko':'🇰🇷', 'he':'🇮🇱', 'ga':'🇮🇪', 'it':'🇮🇹',
+              'is':'🇮🇸', 'vi':'🇻🇳'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
-activeLangs = ['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
+activeLangs = [] #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 tCategories = []
 
 #Startup event
@@ -32,7 +34,7 @@ tCategories = []
 async def on_ready():
     global activeLangs
     global tCategories
-
+    
     # for guild in client.guilds:
     #     if guild.name == GUILD: #find our server
     #         break
@@ -43,23 +45,52 @@ async def on_ready():
         f'{guild.name} (id: {guild.id})'
     )
 
-    print ('Members: ' + ', '.join([member.name for member in guild.members]))
+    print('Members: ' + ', '.join([member.name for member in guild.members]))
 
-    print('Active languages:')
-    with open('data.csv', newline = '') as data:
-                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
-                for row in dataRead:
-                    activeLangs = row
-                    print(activeLangs)
-    
+    # Startup Prep
+
+    for lang in googletrans.LANGCODES:
+        if '(' in lang:
+            print(lang)
+            newName = lang
+            for char in lang:
+                if char == ' ':
+                    continue
+                elif char == '(':
+                    newName += '-'
+                    continue
+                elif char == ')':
+                    continue
+                newName += char
+            print(newName)
+    googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
+    googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
+
     print('Translated categories:')
     for cat in guild.categories:
         if '↔' in cat.name:
             tCategories.append(cat)
             print(cat.name)
 
+    print('Active languages:')
+    if (len(tCategories) == 0):
+        print('Loading active languages from memory')
+        with open('data.csv', newline = '') as data:
+                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
+                for row in dataRead:
+                    activeLangs = row
+                    print(activeLangs)
+    else:
+        for lang in tCategories[0].channels:
+            langName = lang.name
+            langCode = googletrans.LANGCODES[langName]
+            # print(f'{langName}, {langCode}')
+            activeLangs.append(langCode)
+        print(activeLangs)
+
     botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
     await botChannel.send('Howdy')
+    print('Bot ready!')
     
 
 #Welcome new members through DM
@@ -97,8 +128,10 @@ async def on_message(message):
                 await m.add_reaction(flagEmojis[lang])
         
         elif command == 'alangs':
+            aLangsNames = langCodesListToString(activeLangs)
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
-            await message.channel.send(f'Active languages: {activeLangs}\nLangs not used: {unusedLangs}')#\nTranslated Categories: {tCategories}')
+            unusedLangsPretty = langCodesListToString(unusedLangs)
+            await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
         
         #Admin Commands
         
@@ -285,7 +318,7 @@ async def on_message(message):
             
             await ch.send(embed = embed)
 
-            # WEBHOOK OPTIOB
+            # WEBHOOK OPTION
             # profilePic = await message.author.avatar_url.read()
             # webhook = await ch.create_webhook(name = message.author.display_name, avatar = profilePic)
 
