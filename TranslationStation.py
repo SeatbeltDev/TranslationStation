@@ -26,15 +26,14 @@ flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪'
               'af':'🇿🇦', 'haw':'🏝️', 'ko':'🇰🇷', 'he':'🇮🇱', 'ga':'🇮🇪', 'it':'🇮🇹',
               'is':'🇮🇸', 'vi':'🇻🇳'}
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
-activeLangs = [] #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
-tCategories = []
-servers = client.guilds
+activeLangsDict = {} #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
+tCategoriesDict = {}
 
 #Startup event
 @client.event
 async def on_ready():
-    global activeLangs
-    global tCategories
+    global activeLangsDict
+    global tCategoriesDict
     
     # guild = discord.utils.get(client.guilds, name = GUILD)
     for g in client.guilds:
@@ -51,7 +50,7 @@ async def on_ready():
 
         for lang in googletrans.LANGCODES:
             if '(' in lang:
-                print(lang)
+                # print(lang)
                 newName = lang
                 for char in lang:
                     if char == ' ':
@@ -62,33 +61,35 @@ async def on_ready():
                     elif char == ')':
                         continue
                     newName += char
-                print(newName)
+                # print(newName)
         googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
         googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
 
         print('Translated categories:')
+        tCategoriesDict[guild] = []
         for cat in guild.categories:
             if '↔' in cat.name:
-                tCategories.append(cat)
+                tCategoriesDict[guild].append(cat)
                 print(cat.name)
 
         print('Active languages:')
-        if (len(tCategories) == 0):
+        if (len(tCategoriesDict[guild]) == 0):
             print('Loading active languages from memory')
             with open(f'{guild}_data.csv', newline = '') as data:
                     dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
                     for row in dataRead:
-                        activeLangs = row
-                        print(activeLangs)
+                        activeLangsDict[g] = row
+                        print(activeLangsDict[g])
         else:
-            for lang in tCategories[0].channels:
+            activeLangsDict[g] = []
+            for lang in tCategoriesDict[guild][0].channels:
                 langName = lang.name
                 langCode = googletrans.LANGCODES[langName]
                 # print(f'{langName}, {langCode}')
-                activeLangs.append(langCode)
-            print(activeLangs)
+                activeLangsDict[g].append(langCode)
+            print(activeLangsDict[g])
 
-        botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
+        botChannel = discord.utils.get(guild.channels, name = 'general')
         await botChannel.send('Howdy')
         print('Bot ready!')
     
@@ -107,8 +108,8 @@ async def on_member_join(member):
 #Translate on message
 @client.event
 async def on_message(message):
-    global activeLangs
-    global tCategories
+    global activeLangsDict
+    global tCategoriesDict
     # guild = discord.utils.get(client.guilds, name = GUILD)
     guild = message.guild
 
@@ -126,12 +127,12 @@ async def on_message(message):
 
         elif command == 'langs':
             m = await message.channel.send('React to this message to choose your language(s).')
-            for lang in activeLangs:
+            for lang in activeLangsDict[guild]:
                 await m.add_reaction(flagEmojis[lang])
         
         elif command == 'alangs':
-            aLangsNames = langCodesListToString(activeLangs)
-            unusedLangs = list(set(flagEmojis.keys()) - set(activeLangs))
+            aLangsNames = langCodesListToString(activeLangsDict[guild])
+            unusedLangs = list(set(flagEmojis.keys()) - set(activeLangsDict[guild]))
             unusedLangsPretty = langCodesListToString(unusedLangs)
             await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
         
@@ -176,10 +177,10 @@ async def on_message(message):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
 
             newCategory = await guild.create_category(categoryName)
-            tCategories.append(newCategory)
+            tCategoriesDict[guild].append(newCategory)
 
             #create channel and set view permissions
-            for lang in activeLangs:
+            for lang in activeLangsDict[guild]:
                 chan = await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
                 role = discord.utils.get(guild.roles, name = chan.name)
 
@@ -194,7 +195,7 @@ async def on_message(message):
             categoryName = removeprefix(command, 'rcat') + ' ↔'
 
             #TODO clean up, get category from tCategories[] instead of just grabbing it
-            cat = discord.utils.get(tCategories, name = categoryName)
+            cat = discord.utils.get(tCategoriesDict[guild], name = categoryName)
             
             #delete all channels in cat first
             for chan in cat.channels:
@@ -202,7 +203,7 @@ async def on_message(message):
 
             #delete cat
             await cat.delete()
-            tCategories.remove(cat)
+            tCategoriesDict[guild].remove(cat)
 
             await message.channel.send(f'{cat} category removed.')
 
@@ -230,20 +231,20 @@ async def on_message(message):
                 await message.channel.send('Enter a valid language code (ex: en, es, zh-cn) or the name of a language (ex: english, spanish, chinese (simplified)')
                 return
 
-            if lang in activeLangs: #lang already active
+            if lang in activeLangsDict[guild]: #lang already active
                     await message.channel.send(f'**{langName.title()}** is already an active language')    
                     return
 
             '''Automate setup for new lang'''
             
-            activeLangs.append(lang)
+            activeLangsDict[guild].append(lang)
 
             #create role
             await guild.create_role(name = langName) #add random color would be nice
             print(f'{langName.title()} role created')
 
             #create channels
-            for cat in tCategories:
+            for cat in tCategoriesDict[guild]:
                 chan = await cat.create_text_channel(langName)
                 role = discord.utils.get(guild.roles, name = chan.name)
 
@@ -271,19 +272,19 @@ async def on_message(message):
 
             role = discord.utils.get(guild.roles, name = langName)
 
-            if lang not in activeLangs:
+            if lang not in activeLangsDict[guild]:
                 await message.channel.send(f'**{langName.title()}** is not an active language')
                 return
             
             #remove from active
-            activeLangs.remove(lang)
+            activeLangsDict[guild].remove(lang)
 
             #delete role
             await role.delete()
             await message.channel.send(f'Removed **{langName.title()}** role and channels')
             
             #delete channels
-            for cat in tCategories:
+            for cat in tCategoriesDict[guild]:
                 for chan in cat.channels:
                     if chan.name == langName:
                         await chan.delete()
@@ -296,7 +297,7 @@ async def on_message(message):
                 
                 with open(f'{message.guild}_data.csv', 'w', newline = '') as data:
                     dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
-                    dataWrite.writerow(activeLangs)
+                    dataWrite.writerow(activeLangsDict[g])
 
             await message.channel.send('Buh bye!')
             await client.close()
