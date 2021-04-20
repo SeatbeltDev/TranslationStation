@@ -28,6 +28,7 @@ flagEmojis = {'en':'🇬🇧', 'es':'🇪🇸', 'ja':'🇯🇵', 'de':'🇩🇪'
 flagEmojisR = {i: d for d, i in flagEmojis.items()}
 activeLangs = [] #['en', 'es', 'ja', 'de', 'fr', 'zh-cn', 'hi', 'ar', 'bn', 'ru']
 tCategories = []
+servers = client.guilds
 
 #Startup event
 @client.event
@@ -35,62 +36,61 @@ async def on_ready():
     global activeLangs
     global tCategories
     
-    # for guild in client.guilds:
-    #     if guild.name == GUILD: #find our server
-    #         break
-    guild = discord.utils.get(client.guilds, name = GUILD)
+    # guild = discord.utils.get(client.guilds, name = GUILD)
+    for g in client.guilds:
+        guild = g
     
-    print( #display bot name and server info
-        f'{client.user} is connected to the following guild: '
-        f'{guild.name} (id: {guild.id})'
-    )
+        print( #display bot name and server info
+            f'{client.user} is connected to the following guild: '
+            f'{guild.name} (id: {guild.id})'
+        )
 
-    print('Members: ' + ', '.join([member.name for member in guild.members]))
+        print('Members: ' + ', '.join([member.name for member in guild.members]))
 
-    # Startup Prep
+        # Startup Prep
 
-    for lang in googletrans.LANGCODES:
-        if '(' in lang:
-            print(lang)
-            newName = lang
-            for char in lang:
-                if char == ' ':
-                    continue
-                elif char == '(':
-                    newName += '-'
-                    continue
-                elif char == ')':
-                    continue
-                newName += char
-            print(newName)
-    googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
-    googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
+        for lang in googletrans.LANGCODES:
+            if '(' in lang:
+                print(lang)
+                newName = lang
+                for char in lang:
+                    if char == ' ':
+                        continue
+                    elif char == '(':
+                        newName += '-'
+                        continue
+                    elif char == ')':
+                        continue
+                    newName += char
+                print(newName)
+        googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
+        googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
 
-    print('Translated categories:')
-    for cat in guild.categories:
-        if '↔' in cat.name:
-            tCategories.append(cat)
-            print(cat.name)
+        print('Translated categories:')
+        for cat in guild.categories:
+            if '↔' in cat.name:
+                tCategories.append(cat)
+                print(cat.name)
 
-    print('Active languages:')
-    if (len(tCategories) == 0):
-        print('Loading active languages from memory')
-        with open('data.csv', newline = '') as data:
-                dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
-                for row in dataRead:
-                    activeLangs = row
-                    print(activeLangs)
-    else:
-        for lang in tCategories[0].channels:
-            langName = lang.name
-            langCode = googletrans.LANGCODES[langName]
-            # print(f'{langName}, {langCode}')
-            activeLangs.append(langCode)
-        print(activeLangs)
+        print('Active languages:')
+        if (len(tCategories) == 0):
+            print('Loading active languages from memory')
+            with open(f'{guild}_data.csv', newline = '') as data:
+                    dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
+                    for row in dataRead:
+                        activeLangs = row
+                        print(activeLangs)
+        else:
+            for lang in tCategories[0].channels:
+                langName = lang.name
+                langCode = googletrans.LANGCODES[langName]
+                # print(f'{langName}, {langCode}')
+                activeLangs.append(langCode)
+            print(activeLangs)
 
-    botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
-    await botChannel.send('Howdy')
-    print('Bot ready!')
+        botChannel = discord.utils.get(guild.channels, name = 'bot_commands')
+        await botChannel.send('Howdy')
+        print('Bot ready!')
     
 
 #Welcome new members through DM
@@ -98,6 +98,7 @@ async def on_ready():
 async def on_member_join(member):
     await member.create_dm()
     guild = discord.utils.get(client.guilds, name = GUILD)
+    # TODO FIX FOR OTHER SERVERS
 
     await member.dm_channel.send(
         f'Hey {member.name}! Welcome to {guild.name}.'
@@ -108,7 +109,8 @@ async def on_member_join(member):
 async def on_message(message):
     global activeLangs
     global tCategories
-    guild = discord.utils.get(client.guilds, name = GUILD)
+    # guild = discord.utils.get(client.guilds, name = GUILD)
+    guild = message.guild
 
     # if message.author == client.user: return #ignore bot's own messages
     if message.author.bot: return #ignore bot's own messages
@@ -140,6 +142,10 @@ async def on_message(message):
             print(f'{message.author.name} tried to use "{message.content}" command.')
             await message.channel.send('You do not have permission to use that command.')
             return
+
+        elif command == 'info':
+            # await message.channel.send(f'Guild: {guild}')
+            await message.channel.send(f'Guild: {client.guilds}')
 
         elif command.startswith('emb'):
             msg = removeprefix(command, 'emb')
@@ -285,11 +291,12 @@ async def on_message(message):
             print(f'{langName.title()} channels removed')
 
         elif command == 'stop':
-            print('Saving data...')
-            
-            with open('data.csv', 'w', newline = '') as data:
-                dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
-                dataWrite.writerow(activeLangs)
+            for g in client.guilds:
+                print(f'Saving data for server: {g}')
+                
+                with open(f'{message.guild}_data.csv', 'w', newline = '') as data:
+                    dataWrite = csv.writer(data, delimiter = ' ', quotechar = '|')
+                    dataWrite.writerow(activeLangs)
 
             await message.channel.send('Buh bye!')
             await client.close()
