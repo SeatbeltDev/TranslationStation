@@ -48,6 +48,7 @@ async def on_ready():
 
         # Startup Prep
 
+        # TODO FIX LANGS WITH PARENTHESES
         for lang in googletrans.LANGCODES:
             if '(' in lang:
                 # print(lang)
@@ -132,6 +133,7 @@ async def on_message(message):
         
         elif command == 'alangs':
             aLangsNames = langCodesListToString(activeLangsDict[guild])
+            if aLangsNames == '': aLangsNames = 'None'
             unusedLangs = list(set(flagEmojis.keys()) - set(activeLangsDict[guild]))
             unusedLangsPretty = langCodesListToString(unusedLangs)
             await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
@@ -180,7 +182,9 @@ async def on_message(message):
             tCategoriesDict[guild].append(newCategory)
 
             #create channel and set view permissions
+            print(f'Active langs: {activeLangsDict[guild]}')
             for lang in activeLangsDict[guild]:
+                # print(f'Adding {lang}')
                 chan = await newCategory.create_text_channel(googletrans.LANGUAGES[lang])
                 role = discord.utils.get(guild.roles, name = chan.name)
 
