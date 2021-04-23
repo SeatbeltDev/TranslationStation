@@ -49,20 +49,27 @@ async def on_ready():
         # Startup Prep
 
         # TODO FIX LANGS WITH PARENTHESES
-        for lang in googletrans.LANGCODES:
-            if '(' in lang:
-                # print(lang)
-                newName = lang
-                for char in lang:
-                    if char == ' ':
-                        continue
-                    elif char == '(':
-                        newName += '-'
-                        continue
-                    elif char == ')':
-                        continue
-                    newName += char
-                # print(newName)
+        # for lang in googletrans.LANGCODES:
+        #     if '(' in lang:
+        #         print(f'old name: {lang}')
+        #         newName = ''
+        #         for char in lang:
+        #             if char == ' ':
+        #                 continue
+        #             elif char == '(':
+        #                 newName += '-'
+        #                 continue
+        #             elif char == ')':
+        #                 continue
+        #             newName += char
+        #         print(f'new name: {newName}')
+
+        #         langCode = googletrans.LANGCODES[lang]
+        #         print(f'Setting LANGUAGES[{langCode}] = {newName}')
+        #         googletrans.LANGUAGES[langCode] = newName
+        #         print(f'Setting LANGCODES[{newName}] = {langCode}')
+        #         googletrans.LANGCODES[newName] = langCode
+        #         print(f'{langCode}/{langName} good')
         googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
         googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
 
@@ -76,11 +83,15 @@ async def on_ready():
         print('Active languages:')
         if (len(tCategoriesDict[guild]) == 0):
             print('Loading active languages from memory')
-            with open(f'{guild}_data.csv', newline = '') as data:
-                    dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
-                    for row in dataRead:
-                        activeLangsDict[g] = row
-                        print(activeLangsDict[g])
+            try:
+                with open(f'{guild}_data.csv', newline = '') as data:
+                        dataRead = csv.reader(data, delimiter = ' ', quotechar = '|')
+                        for row in dataRead:
+                            activeLangsDict[g] = row
+                            print(activeLangsDict[g])
+            except:
+                activeLangsDict[g] = []
+                print(f'No {guild}_data.csv file. Active languages set to none')
         else:
             activeLangsDict[g] = []
             for lang in tCategoriesDict[guild][0].channels:
@@ -94,17 +105,16 @@ async def on_ready():
         await botChannel.send('Howdy')
         print('Bot ready!')
     
+# REMOVED, unnecessary 
+# Welcome new members through DM
+# @client.event
+# async def on_member_join(member):
+#     await member.create_dm()
+#     guild = discord.utils.get(client.guilds, name = GUILD)
 
-#Welcome new members through DM
-@client.event
-async def on_member_join(member):
-    await member.create_dm()
-    guild = discord.utils.get(client.guilds, name = GUILD)
-    # TODO FIX FOR OTHER SERVERS
-
-    await member.dm_channel.send(
-        f'Hey {member.name}! Welcome to {guild.name}.'
-    )
+#     await member.dm_channel.send(
+#         f'Hey {member.name}! Welcome to {guild.name}.'
+#     )
 
 #Translate on message
 @client.event
@@ -263,6 +273,7 @@ async def on_message(message):
         elif command.startswith('rlang'):
             #maybe multiple langs i.e. 'rlang id pt'
             lang = removeprefix(command, 'rlang')
+            print(f'Removing lang: {lang}')
 
             #get lang as langcode (copy/pasted from addlang)
             if lang in googletrans.LANGUAGES:
@@ -279,14 +290,17 @@ async def on_message(message):
             if lang not in activeLangsDict[guild]:
                 await message.channel.send(f'**{langName.title()}** is not an active language')
                 return
-            
+            print(1)
             #remove from active
             activeLangsDict[guild].remove(lang)
-
+            print(2)
             #delete role
+            print(f'langname: {langName}')
+            print(role)
             await role.delete()
+            print(3)
             await message.channel.send(f'Removed **{langName.title()}** role and channels')
-            
+            print(4)
             #delete channels
             for cat in tCategoriesDict[guild]:
                 for chan in cat.channels:
