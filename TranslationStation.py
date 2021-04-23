@@ -290,17 +290,15 @@ async def on_message(message):
             if lang not in activeLangsDict[guild]:
                 await message.channel.send(f'**{langName.title()}** is not an active language')
                 return
-            print(1)
+
             #remove from active
             activeLangsDict[guild].remove(lang)
-            print(2)
+
             #delete role
             print(f'langname: {langName}')
-            print(role)
             await role.delete()
-            print(3)
             await message.channel.send(f'Removed **{langName.title()}** role and channels')
-            print(4)
+
             #delete channels
             for cat in tCategoriesDict[guild]:
                 for chan in cat.channels:
