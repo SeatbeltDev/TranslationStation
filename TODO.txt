@@ -1,27 +1,19 @@
 --- FROM MOST TO LEAST IMPORTANT ---
 
 
-fix data.csv saving in user file rather than this directory
-
-fix chinese-simplified lang channel
-	can't have parens in discord channel names
-	maybe modify to remove dash and add parens?
-	check for other paren lang names in googletrans
-	*addlang zh-ch adds the channel only to general cat, rlang does nothing
+fix langs with parentheses properly
 
 add MORE possible langs manually (any way to automate getting the flag emoji?)
-
-? got server hosting, but only runs stuff on original server, regardless of server command sent
-
-
-
-clean up *rlang
-
-transfer reactions betweens langs
 
 add multiple langs/categories at a time
 
 
+
+fix data.csv saving in user file rather than this directory
+
+clean up *rlang
+
+transfer reactions betweens langs
 
 multithreading?
 	https://stackoverflow.com/questions/7207309/how-to-run-functions-in-parallel/7207336#7207336
@@ -32,13 +24,24 @@ add support for pirate speak
 	https://pypi.org/project/arrr/
 
 
+
 --- KNOWN ISSUES ---
 
 the bot is single-threaded, i.e. it can only translate one message at a time. other messages, even in other categories, must wait in line if a message is currently being translated. I don't know of a way to speed this up
 
 
 
+
 --- COMPLETED TASKS BELOW ---
+
+
+fix chinese-simplified lang channel
+	can't have parens in discord channel names
+	maybe modify to remove dash and add parens?
+	check for other paren lang names in googletrans
+	*addlang zh-ch adds the channel only to general cat, rlang does nothing
+
+Server hosting good. // got server hosting, but only runs stuff on original server, regardless of server command sent
 
 REPLACED WITH EMBEDS
 webhook/clean messages

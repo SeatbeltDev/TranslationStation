@@ -48,10 +48,10 @@ async def on_ready():
 
         # Startup Prep
 
-        # TODO FIX LANGS WITH PARENTHESES
+        # TODO FIX LANGS WITH PARENTHESES NON-MANUALLY
         # for lang in googletrans.LANGCODES:
         #     if '(' in lang:
-        #         print(f'old name: {lang}')
+        #         print(f'old name: "{lang}"')
         #         newName = ''
         #         for char in lang:
         #             if char == ' ':
@@ -62,16 +62,22 @@ async def on_ready():
         #             elif char == ')':
         #                 continue
         #             newName += char
-        #         print(f'new name: {newName}')
+        #         print(f'new name: "{newName}"')
 
         #         langCode = googletrans.LANGCODES[lang]
         #         print(f'Setting LANGUAGES[{langCode}] = {newName}')
         #         googletrans.LANGUAGES[langCode] = newName
         #         print(f'Setting LANGCODES[{newName}] = {langCode}')
         #         googletrans.LANGCODES[newName] = langCode
-        #         print(f'{langCode}/{langName} good')
+        #         print(f'{langCode}/{langName} modified')
         googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
         googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
+        googletrans.LANGUAGES['zh-tw'] = 'chinese-traditional'
+        googletrans.LANGUAGES['chinese-traditional'] = 'zh-tw'
+        googletrans.LANGUAGES['ku'] = 'kurdish-kurmanji'
+        googletrans.LANGUAGES['kurdish-kurmanji'] = 'ku'
+        googletrans.LANGUAGES['my'] = 'myanmar-burmese'
+        googletrans.LANGCODES['myanmar-burmese'] = 'my'
 
         print('Translated categories:')
         tCategoriesDict[guild] = []
