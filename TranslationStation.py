@@ -108,7 +108,7 @@ async def on_ready():
             print(activeLangsDict[g])
 
         botChannel = discord.utils.get(guild.channels, name = 'general')
-        await botChannel.send('Howdy')
+        await botChannel.send('Howdy! Type *help for help.')
         print('Bot ready!')
     
 # REMOVED, unnecessary 
@@ -143,7 +143,10 @@ async def on_message(message):
             await message.channel.send(helpText)
 
         elif command == 'langs':
-            m = await message.channel.send('React to this message to choose your language(s).')
+            aLangsNames = langCodesListToString(activeLangsDict[guild])
+            if aLangsNames == '': aLangsNames = 'None'
+
+            m = await message.channel.send(f'Active languages: `{aLangsNames}`\nReact to this message to choose your language(s).')
             for lang in activeLangsDict[guild]:
                 await m.add_reaction(flagEmojis[lang])
         
@@ -167,15 +170,7 @@ async def on_message(message):
             
             for lang in myLangs:
                 await m.add_reaction(flagEmojis[lang])
-            
 
-        elif command == 'alangs':
-            aLangsNames = langCodesListToString(activeLangsDict[guild])
-            if aLangsNames == '': aLangsNames = 'None'
-            unusedLangs = list(set(flagEmojis.keys()) - set(activeLangsDict[guild]))
-            unusedLangsPretty = langCodesListToString(unusedLangs)
-            await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
-        
         #Admin Commands
         
         elif not message.author.permissions_in(message.channel).administrator:
@@ -185,33 +180,41 @@ async def on_message(message):
             return
 
         elif command == 'info':
-            # await message.channel.send(f'Guild: {guild}')
             await message.channel.send(f'Guild: {client.guilds}')
 
-        elif command.startswith('emb'):
-            msg = removeprefix(command, 'emb')
+        elif command == 'alangs':
+            aLangsNames = langCodesListToString(activeLangsDict[guild])
+            if aLangsNames == '': aLangsNames = 'None'
+            unusedLangs = list(set(flagEmojis.keys()) - set(activeLangsDict[guild]))
+            unusedLangsPretty = langCodesListToString(unusedLangs)
+            await message.channel.send(f'Active languages: \n`{aLangsNames}`\nLangs not used: \n`{unusedLangsPretty}`')#\nTranslated Categories: {tCategories}')
 
-            embed = discord.Embed(description = msg)
+        elif command.startswith('emb'):
+            pass
+            # msg = removeprefix(command, 'emb')
+
+            # embed = discord.Embed(description = msg)
             
-            embed.set_author(name = message.author.display_name,
-                icon_url = message.author.avatar_url)
+            # embed.set_author(name = message.author.display_name,
+            #     icon_url = message.author.avatar_url)
             
-            await message.channel.send(embed = embed)
+            # await message.channel.send(embed = embed)
 
         elif command.startswith('th'):
             # Testing webhooks
             # This isn't going to work for the final product
+            pass
 
-            msg = removeprefix(command, 'th')
+            # msg = removeprefix(command, 'th')
 
-            print(f'About to try sending webhook msg: {msg}')
-            profilePic = await message.author.avatar_url.read()
-            print('middle')
-            webhook = await message.channel.create_webhook(name = message.author.display_name, avatar = profilePic)
+            # print(f'About to try sending webhook msg: {msg}')
+            # profilePic = await message.author.avatar_url.read()
+            # print('middle')
+            # webhook = await message.channel.create_webhook(name = message.author.display_name, avatar = profilePic)
 
-            print(f'Sending webhook message: {msg}')
-            await webhook.send(msg)
-            await webhook.delete()
+            # print(f'Sending webhook message: {msg}')
+            # await webhook.send(msg)
+            # await webhook.delete()
 
         elif command.startswith('addcat'):
             categoryName = removeprefix(command, 'addcat') + ' ↔'
@@ -387,7 +390,7 @@ async def on_reaction_add(reaction, user):
     #print(user.name)
     if user == client.user: return
 
-    if reaction.message.content == 'React to this message to choose your language(s).':
+    if 'React to this message to choose your language(s).' in reaction.message.content:
         if reaction.emoji in flagEmojisR:
             await user.add_roles(get(user.guild.roles,
                 name = googletrans.LANGUAGES[flagEmojisR[reaction.emoji]]))
