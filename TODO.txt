@@ -1,3 +1,7 @@
+Bot invite link:
+https://discord.com/api/oauth2/authorize?client_id=786721292195201046&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8118&scope=bot
+
+
 --- FROM MOST TO LEAST IMPORTANT ---
 
 

@@ -111,16 +111,55 @@ async def on_ready():
         await botChannel.send('Howdy! Type *help for help.')
         print('Bot ready!')
     
+@client.event
+async def on_guild_join(guild):
+    global activeLangsDict
+    global tCategoriesDict
+    
+    googletrans.LANGUAGES['zh-cn'] = 'chinese-simplified'
+    googletrans.LANGCODES['chinese-simplified'] = 'zh-cn'
+    googletrans.LANGUAGES['zh-tw'] = 'chinese-traditional'
+    googletrans.LANGUAGES['chinese-traditional'] = 'zh-tw'
+    googletrans.LANGUAGES['ku'] = 'kurdish-kurmanji'
+    googletrans.LANGUAGES['kurdish-kurmanji'] = 'ku'
+    googletrans.LANGUAGES['my'] = 'myanmar-burmese'
+    googletrans.LANGCODES['myanmar-burmese'] = 'my'
+
+    print('Translated categories:')
+    tCategoriesDict[guild] = []
+    for cat in guild.categories:
+        if '↔' in cat.name:
+            tCategoriesDict[guild].append(cat)
+            print(cat.name)
+
+    print('Active languages:')
+    if (len(tCategoriesDict[guild]) == 0):
+        activeLangsDict[guild] = []
+        print(f'No {guild}_data.csv file. Active languages set to none')
+    else:
+        activeLangsDict[guild] = []
+        for lang in tCategoriesDict[guild][0].channels:
+            langName = lang.name
+            langCode = googletrans.LANGCODES[langName]
+            # print(f'{langName}, {langCode}')
+            activeLangsDict[guild].append(langCode)
+        print(activeLangsDict[guild])
+
+    channel = guild.text_channels[0]
+    if channel.permissions_for(guild.me).send_messages:
+        await channel.send('Howdy! I am a Translation Station. I translate messages. Type *help for help.')
+
 # REMOVED, unnecessary 
 # Welcome new members through DM
-# @client.event
-# async def on_member_join(member):
-#     await member.create_dm()
-#     guild = discord.utils.get(client.guilds, name = GUILD)
+@client.event
+async def on_member_join(member):
+    pass
+    # await member.create_dm()
+    # guild = discord.utils.get(client.guilds, name = GUILD)
 
-#     await member.dm_channel.send(
-#         f'Hey {member.name}! Welcome to {guild.name}.'
-#     )
+    # await member.dm_channel.send(
+    #     f'Hey {member.name}! Welcome to {guild.name}.'
+    # )
 
 #Translate on message
 @client.event
@@ -381,7 +420,8 @@ async def on_message(message):
             # await webhook.send(translatedMsg)
             # await webhook.delete()
 
-        await message.add_reaction('✅')
+        if message.channel in tCategoriesDict[guild]:
+            await message.add_reaction('✅')
 
 
 #Respond to reactions
