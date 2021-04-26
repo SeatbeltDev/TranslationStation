@@ -4,6 +4,7 @@ import googletrans
 def removeprefix(string, remove):
     return string[len(remove)+1:]
 
+# Takes in a list of langcodes, outputs string of capitalized languages separated by spaces
 def langCodesListToString(langs):
     outList = ''
     for lang in langs:

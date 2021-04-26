@@ -147,6 +147,28 @@ async def on_message(message):
             for lang in activeLangsDict[guild]:
                 await m.add_reaction(flagEmojis[lang])
         
+        elif command == 'mylangs':
+            myLangs = []
+
+            for role in message.author.roles:
+                if role.name in googletrans.LANGCODES:
+                    roleCode = googletrans.LANGCODES[role.name]
+
+                    if roleCode in activeLangsDict[guild]:
+                        myLangs.append(roleCode)
+
+            myLangsString = ''
+            if len(myLangs) > 0:
+                myLangsString = langCodesListToString(myLangs)
+            else:
+                myLangsString = 'None'
+
+            m = await message.channel.send(f'{message.author.name}\'s languages: `{myLangsString}`\nClick a reaction to remove a language.')
+            
+            for lang in myLangs:
+                await m.add_reaction(flagEmojis[lang])
+            
+
         elif command == 'alangs':
             aLangsNames = langCodesListToString(activeLangsDict[guild])
             if aLangsNames == '': aLangsNames = 'None'
@@ -228,14 +250,15 @@ async def on_message(message):
             await message.channel.send(f'{cat} category removed.')
 
         elif command.startswith('addlangs'):
-            langs = removeprefix(command, 'addlang').split()
+            pass
+            # langs = removeprefix(command, 'addlang').split()
 
-            for lang in langs:
-                msg = f'*addlang {lang}'
-                print(f'Calling message: ({msg})')
-                # msg = discord.Message(content = '*')
-                print(f'Message object: {msg}')
-                await on_message(msg)
+            # for lang in langs:
+            #     msg = f'*addlang {lang}'
+            #     print(f'Calling message: ({msg})')
+            #     # msg = discord.Message(content = '*')
+            #     print(f'Message object: {msg}')
+            #     await on_message(msg)
 
         elif command.startswith('addlang'):
             #maybe allow multiple langs i.e. 'addlang id pt'
@@ -367,6 +390,11 @@ async def on_reaction_add(reaction, user):
     if reaction.message.content == 'React to this message to choose your language(s).':
         if reaction.emoji in flagEmojisR:
             await user.add_roles(get(user.guild.roles,
+                name = googletrans.LANGUAGES[flagEmojisR[reaction.emoji]]))
+
+    if 'Click a reaction to remove a language.' in reaction.message.content:
+        if reaction.emoji in flagEmojisR:
+            await user.remove_roles(get(user.guild.roles,
                 name = googletrans.LANGUAGES[flagEmojisR[reaction.emoji]]))
 
 #Handle errors - catch bad message and write to file
