@@ -419,8 +419,8 @@ async def on_message(message):
 
             # await webhook.send(translatedMsg)
             # await webhook.delete()
-
-        if message.channel in tCategoriesDict[guild]:
+        
+        if message.channel.category in tCategoriesDict[guild]:
             await message.add_reaction('✅')
 
 
